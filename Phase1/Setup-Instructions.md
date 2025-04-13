@@ -41,22 +41,27 @@ All features used for model training are synced with the real-time Kafka pipelin
 ## Start Kafka
 
 Step 1: Generate UUID
-export KAFKA_UUID=$(bin/kafka-storage.sh random-uuid)
+
+- export KAFKA_UUID=$(bin/kafka-storage.sh random-uuid)
 
 Step 2: Format metadata
-bin/kafka-storage.sh format -t $KAFKA_UUID --initial-controllers=1@CONTROLLER://localhost:9093 -c config/kraft/server.properties
+
+- bin/kafka-storage.sh format -t $KAFKA_UUID --initial-controllers=1@CONTROLLER://localhost:9093 -c config/kraft/server.properties
 
 Step 3: Start Kafka
-bin/kafka-server-start.sh config/kraft/server.properties
+
+- bin/kafka-server-start.sh config/kraft/server.properties
 
 
 ## Train Models in mlflow.py
 
 This logs all models and exports the best one as:
 
-best_xgb_model.pkl
 
-best_xgb_model_metadata.json
+- best_xgb_model.pkl
+
+
+- best_xgb_model_metadata.json
 
 
 ## Stream Real-Time Data
