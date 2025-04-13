@@ -36,9 +36,9 @@ All features used for model training are synced with the real-time Kafka pipelin
 ---
 
 
-### How to run it
+## How to run it
 
-## Start Kafka
+### Start Kafka
 
 Step 1: Generate UUID
 
@@ -53,7 +53,7 @@ Step 3: Start Kafka
 - bin/kafka-server-start.sh config/kraft/server.properties
 
 
-## Train Models in mlflow.py
+### Train Models in mlflow.py
 
 This logs all models and exports the best one as:
 
