@@ -5,8 +5,9 @@ import numpy as np
 import pandas as pd
 import logging
 import mlflow.xgboost
-from evidently.dashboard import Dashboard
-from evidently.tabs import DataDriftTab
+
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset
 
 logging.basicConfig(level=logging.INFO)
 
@@ -97,10 +98,10 @@ for message in consumer:
             logging.info(f"💾 Saved {len(predictions)} predictions to CSV.")
 
             # Evidently data drift dashboard
-            dashboard = Dashboard(tabs=[DataDriftTab()])
-            dashboard.calculate(ref_data, current_df)
-            dashboard.save("drift_dashboard.html")
-            logging.info("📊 Data drift dashboard saved.")
+            report = Report(metrics=[DataDriftPreset()])
+            report.run(reference_data=ref_data, current_data=current_df)
+            report.save_html("drift_report.html")
+            logging.info("📊 Data drift report saved.")
 
             # Reset records
             feature_records =[]
@@ -112,13 +113,12 @@ for message in consumer:
         logging.error(f"❌ Error during prediction or monitoring: {e}")
 
 # ✅ Final save
-predictions_df = pd.DataFrame(predictions, columns=['Predicted_CO(GT)'])
-predictions_df.to_csv('predictions.csv', index=False)
-logging.info("✅ Final predictions saved to CSV.")
-
 if feature_records:
+    predictions_df = pd.DataFrame(predictions, columns=['Predicted_CO(GT)'])
+    predictions_df.to_csv('predictions.csv', index=False)
     current_df = pd.concat(feature_records, ignore_index=True)
-    dashboard = Dashboard(tabs=[DataDriftTab()])
-    dashboard.calculate(ref_data, current_df)
-    dashboard.save("drift_dashboard.html")
-    logging.info("📊 Final drift dashboard saved.")
+    report = Report(metrics=[DataDriftPreset()])
+    report.run(reference_data=ref_data, current_data=current_df)
+    report.save_html("drift_dashboard.html")
+    logging.info("📊 Final data drift report saved.")
+    logging.info("💾 Final predictions saved to CSV.")
